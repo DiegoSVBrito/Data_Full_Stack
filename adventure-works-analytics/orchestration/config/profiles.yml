@@ -1,0 +1,13 @@
+adventure_works_analytics:
+  target: prod
+  outputs:
+    prod:
+      type: databricks
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      http_path: /sql/1.0/warehouses/your_warehouse_id
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      catalog: ted_dev
+      schema: dev_diego_brito
+      threads: 4
+      keepalives_idle: 240
+      search_path: "{{ env_var('DBT_DATABRICKS_SEARCH_PATH', 'ted_dev') }}"

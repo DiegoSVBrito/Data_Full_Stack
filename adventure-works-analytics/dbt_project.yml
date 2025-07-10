@@ -1,0 +1,40 @@
+name: 'adventure_works_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'adventure_works_analytics'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  adventure_works_analytics:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+      dimensions:
+        +materialized: table
+        +schema: dimensions
+      # Convenções de nomenclatura
+      # stg_ = staging models
+      # intermediate_ = intermediate models  
+      # fact_ = fact tables mart
+      # dim_ = dimension tables mart
+
+vars:
+  raw_schema: "ted_dev.dev_diego_brito"

@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: int_sales__enriched
+    description: "Intermediate enriched sales model combining order headers, details, customers, territories, and products for comprehensive sales analysis"
+    columns:
+      - name: SalesOrderID
+        description: "Primary key for sales order"
+        tests:
+          - not_null
+      - name: SalesOrderDetailID
+        description: "Primary key for sales order detail line items"
+        tests:
+          - unique
+          - not_null
+      - name: CustomerID
+        description: "Foreign key to customer"
+        tests:
+          - not_null
+      - name: ProductID
+        description: "Foreign key to product"
+        tests:
+          - not_null
+      - name: SalesPersonID
+        description: "Foreign key to sales person"
+      - name: TerritoryID
+        description: "Foreign key to sales territory"
+      - name: order_date
+        description: "Date when order was placed"
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year extracted from order date"
+      - name: order_month
+        description: "Month extracted from order date"
+      - name: order_quarter
+        description: "Quarter extracted from order date"
+      - name: sales_channel
+        description: "Sales channel: Online or Offline"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: order_revenue_category
+        description: "Revenue category based on order total"
+        tests:
+          - accepted_values:
+              values: ['High Value (10K+)', 'Medium Value (1K-10K)', 'Low Value (100-1K)', 'Micro Value (<100)']
+      - name: line_revenue_category
+        description: "Revenue category based on line item total"
+      - name: quantity_category
+        description: "Quantity category for line items"
+      - name: line_total
+        description: "Total amount for this line item"
+        tests:
+          - not_null
+      - name: order_total_due
+        description: "Total amount due for the entire order"
+        tests:
+          - not_null
+      - name: customer_type
+        description: "Customer type classification"
+        tests:
+          - accepted_values:
+              values: ['Individual', 'Store/Business', 'Store Contact', 'Unknown']
+      - name: territory_name
+        description: "Name of the sales territory"
+      - name: region
+        description: "Regional grouping"
+      - name: product_name
+        description: "Product name"
+        tests:
+          - not_null
+      - name: ProductSubcategoryID
+        description: "Product subcategory identifier"

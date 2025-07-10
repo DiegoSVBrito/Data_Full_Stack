@@ -1,0 +1,635 @@
+version: 2
+
+models:
+  - name: fact_sales_transactions
+    description: "Fact table containing transaction-level sales data for detailed analysis"
+    columns:
+      - name: SalesOrderID
+        description: "Sales order identifier"
+        tests:
+          - not_null
+      - name: SalesOrderDetailID
+        description: "Unique identifier for each sales order line item"
+        tests:
+          - unique
+          - not_null
+      - name: CustomerID
+        description: "Customer identifier"
+        tests:
+          - not_null
+      - name: ProductID
+        description: "Product identifier"
+        tests:
+          - not_null
+      - name: SalesPersonID
+        description: "Sales person identifier"
+      - name: TerritoryID
+        description: "Territory identifier"
+      - name: order_date
+        description: "Date when the order was placed"
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year of the order"
+      - name: order_month
+        description: "Month of the order"
+      - name: order_quarter
+        description: "Quarter of the order"
+      - name: sales_channel
+        description: "Sales channel (Online/Offline)"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: order_revenue_category
+        description: "Revenue category based on order total"
+      - name: line_revenue_category
+        description: "Revenue category based on line total"
+      - name: quantity_category
+        description: "Quantity category for the line item"
+      - name: line_total
+        description: "Total amount for the line item"
+        tests:
+          - not_null
+      - name: order_total_due
+        description: "Total amount due for the order"
+        tests:
+          - not_null
+      - name: customer_type
+        description: "Customer type classification"
+      - name: territory_name
+        description: "Territory name"
+      - name: region
+        description: "Regional grouping"
+      - name: product_name
+        description: "Product name"
+        tests:
+          - not_null
+      - name: ProductSubcategoryID
+        description: "Product subcategory identifier"
+
+  - name: fact_sales_monthly_agg
+    description: "Monthly aggregated fact table for sales performance analysis by key dimensions"
+    columns:
+      - name: order_year
+        description: "Year of the sales data"
+        tests:
+          - not_null
+      - name: order_month
+        description: "Month of the sales data"
+        tests:
+          - not_null
+      - name: customer_type
+        description: "Customer type classification"
+      - name: territory_name
+        description: "Territory name"
+      - name: region
+        description: "Regional grouping"
+      - name: sales_channel
+        description: "Sales channel (Online/Offline)"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: order_revenue_category
+        description: "Revenue category based on order total"
+      - name: total_orders
+        description: "Total number of distinct orders"
+        tests:
+          - not_null
+      - name: total_line_items
+        description: "Total number of line items"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Number of unique customers"
+        tests:
+          - not_null
+      - name: unique_products
+        description: "Number of unique products sold"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Total revenue amount"
+        tests:
+          - not_null
+      - name: avg_line_value
+        description: "Average value per line item"
+      - name: total_order_value
+        description: "Total order value"
+        tests:
+          - not_null
+      - name: avg_order_value
+        description: "Average order value"
+
+  - name: fact_territorial_performance
+    description: "Territorial performance fact table providing quarterly snapshot of sales performance by territory and sales channel"
+    columns:
+      - name: territory_name
+        description: "Territory name"
+        tests:
+          - not_null
+      - name: region
+        description: "Regional grouping"
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year of the sales data"
+        tests:
+          - not_null
+      - name: order_quarter
+        description: "Quarter of the sales data"
+        tests:
+          - not_null
+      - name: sales_channel
+        description: "Sales channel (Online/Offline)"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: total_orders
+        description: "Total number of distinct orders"
+        tests:
+          - not_null
+      - name: total_line_items
+        description: "Total number of line items"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Number of unique customers"
+        tests:
+          - not_null
+      - name: unique_products
+        description: "Number of unique products sold"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Total revenue amount"
+        tests:
+          - not_null
+      - name: avg_line_value
+        description: "Average value per line item"
+      - name: total_order_value
+        description: "Total order value"
+        tests:
+          - not_null
+      - name: avg_order_value
+        description: "Average order value"
+      - name: b2c_revenue
+        description: "Revenue from B2C customers"
+        tests:
+          - not_null
+      - name: b2b_revenue
+        description: "Revenue from B2B customers"
+        tests:
+          - not_null
+      - name: online_revenue
+        description: "Revenue from online sales"
+        tests:
+          - not_null
+      - name: offline_revenue
+        description: "Revenue from offline sales"
+        tests:
+          - not_null
+      - name: revenue_rank_in_region
+        description: "Revenue ranking within the region for the period"
+        tests:
+          - not_null
+      - name: revenue_share_in_region
+        description: "Revenue share percentage within the region"
+        tests:
+          - not_null
+
+  - name: agg_sales_performance
+    description: "Tabela agregada de performance de vendas com métricas detalhadas por dimensões principais"
+    columns:
+      - name: order_year
+        description: "Ano do pedido"
+        tests:
+          - not_null
+      - name: order_month
+        description: "Mês do pedido"
+        tests:
+          - not_null
+      - name: order_quarter
+        description: "Trimestre do pedido"
+        tests:
+          - not_null
+      - name: sales_channel
+        description: "Canal de vendas (Online/Offline)"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: customer_type
+        description: "Tipo de cliente"
+        tests:
+          - accepted_values:
+              values: ['Individual', 'Store/Business', 'Store Contact', 'Unknown']
+      - name: territory_name
+        description: "Nome do território"
+      - name: region
+        description: "Região"
+      - name: total_orders
+        description: "Total de pedidos únicos"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Receita total"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Número de clientes únicos"
+        tests:
+          - not_null
+      - name: revenue_per_order
+        description: "Receita média por pedido"
+      - name: revenue_per_customer
+        description: "Receita média por cliente"
+      - name: online_revenue_pct
+        description: "Percentual de receita online"
+      - name: b2c_revenue_pct
+        description: "Percentual de receita B2C"
+      - name: b2b_revenue_pct
+        description: "Percentual de receita B2B"
+
+  - name: agg_product_abc_analysis
+    description: "Análise ABC de produtos com classificação por receita, volume e frequência"
+    columns:
+      - name: ProductID
+        description: "ID do produto"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nome do produto"
+        tests:
+          - not_null
+      - name: ProductSubcategoryID
+        description: "ID da subcategoria do produto"
+      - name: total_revenue
+        description: "Receita total do produto"
+        tests:
+          - not_null
+      - name: total_quantity_sold
+        description: "Quantidade total vendida"
+        tests:
+          - not_null
+      - name: total_orders
+        description: "Total de pedidos do produto"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Clientes únicos que compraram o produto"
+        tests:
+          - not_null
+      - name: revenue_rank
+        description: "Ranking por receita"
+        tests:
+          - not_null
+      - name: revenue_share_pct
+        description: "Participação percentual na receita total"
+        tests:
+          - not_null
+      - name: cumulative_revenue_pct
+        description: "Participação acumulada na receita"
+        tests:
+          - not_null
+      - name: abc_category
+        description: "Classificação ABC (A, B, C)"
+        tests:
+          - accepted_values:
+              values: ['A', 'B', 'C']
+      - name: volume_category
+        description: "Categoria por volume"
+        tests:
+          - accepted_values:
+              values: ['High Volume', 'Medium Volume', 'Low Volume']
+      - name: frequency_category
+        description: "Categoria por frequência"
+        tests:
+          - accepted_values:
+              values: ['High Frequency', 'Medium Frequency', 'Low Frequency']
+      - name: product_strategy
+        description: "Estratégia recomendada para o produto"
+        tests:
+          - accepted_values:
+              values: ['Star Product', 'Cash Cow', 'Problem Child', 'Dog', 'Regular Product']
+      - name: product_status
+        description: "Status do produto baseado na última venda"
+        tests:
+          - accepted_values:
+              values: ['Active', 'Slow Moving', 'Dormant', 'Inactive']
+      - name: importance_score
+        description: "Score de importância do produto (0-100)"
+        tests:
+          - not_null
+
+  - name: agg_sales_performance_detailed
+    description: "Análise detalhada de performance de vendas com métricas temporais e rankings"
+    columns:
+      - name: order_year
+        description: "Ano do pedido"
+        tests:
+          - not_null
+      - name: order_month
+        description: "Mês do pedido"
+        tests:
+          - not_null
+      - name: order_quarter
+        description: "Trimestre do pedido"
+        tests:
+          - not_null
+      - name: territory_name
+        description: "Nome do território"
+      - name: region
+        description: "Região"
+      - name: sales_channel
+        description: "Canal de vendas"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: customer_type
+        description: "Tipo de cliente"
+        tests:
+          - accepted_values:
+              values: ['Individual', 'Store/Business', 'Store Contact', 'Unknown']
+      - name: total_revenue
+        description: "Receita total"
+        tests:
+          - not_null
+      - name: total_orders
+        description: "Total de pedidos"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Clientes únicos"
+        tests:
+          - not_null
+      - name: revenue_per_order
+        description: "Receita média por pedido"
+      - name: revenue_per_customer
+        description: "Receita média por cliente"
+      - name: orders_per_customer
+        description: "Pedidos médios por cliente"
+      - name: revenue_growth_pct
+        description: "Crescimento percentual da receita mês a mês"
+      - name: revenue_rank_in_month
+        description: "Ranking de receita no mês"
+        tests:
+          - not_null
+      - name: revenue_share_in_month
+        description: "Participação da receita no mês"
+        tests:
+          - not_null
+      - name: performance_category
+        description: "Categoria de performance"
+        tests:
+          - accepted_values:
+              values: ['Top Performer', 'High Performer', 'Average Performer', 'Below Average', 'Poor Performer']
+      - name: growth_trend
+        description: "Tendência de crescimento"
+        tests:
+          - accepted_values:
+              values: ['No Data', 'High Growth', 'Positive Growth', 'Slight Decline', 'Significant Decline']
+      - name: performance_score
+        description: "Score de performance (0-100)"
+        tests:
+          - not_null
+
+  - name: dim_customers_enhanced
+    description: "Dimensão de clientes enriquecida com métricas de Customer Lifetime Value"
+    columns:
+      - name: customer_key
+        description: "Chave primária do cliente"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Nome do cliente"
+      - name: email_address
+        description: "Email do cliente"
+      - name: city
+        description: "Cidade do cliente"
+      - name: state_province
+        description: "Estado/província do cliente"
+      - name: first_purchase_date
+        description: "Data da primeira compra"
+      - name: last_purchase_date
+        description: "Data da última compra"
+      - name: total_orders
+        description: "Total de pedidos do cliente"
+        tests:
+          - not_null
+      - name: lifetime_revenue
+        description: "Receita total do cliente"
+        tests:
+          - not_null
+      - name: avg_order_value
+        description: "Valor médio do pedido"
+      - name: customer_lifespan_days
+        description: "Dias entre primeira e última compra"
+      - name: monthly_value
+        description: "Valor mensal médio do cliente"
+      - name: customer_segment
+        description: "Segmento do cliente baseado em valor"
+        tests:
+          - accepted_values:
+              values: ['VIP', 'Premium', 'Regular', 'Basic']
+      - name: clv_decile
+        description: "Decil do CLV (1=maior valor, 10=menor valor)"
+        tests:
+          - not_null
+
+  - name: dim_products_performance  
+    description: "Dimensão de produtos com análise de performance e ciclo de vida"
+    columns:
+      - name: product_key
+        description: "Chave primária do produto"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nome do produto"
+      - name: category_name
+        description: "Nome da categoria"
+      - name: subcategory_name
+        description: "Nome da subcategoria"
+      - name: launch_month
+        description: "Mês de lançamento do produto"
+      - name: last_sale_month
+        description: "Mês da última venda"
+      - name: active_months
+        description: "Número de meses ativos"
+      - name: total_units_sold
+        description: "Total de unidades vendidas"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Receita total do produto"
+        tests:
+          - not_null
+      - name: avg_monthly_units
+        description: "Média mensal de unidades vendidas"
+      - name: recent_avg_units
+        description: "Média de unidades nos últimos 6 meses"
+      - name: previous_avg_units
+        description: "Média de unidades no período anterior"
+      - name: lifecycle_stage
+        description: "Estágio do ciclo de vida do produto"
+        tests:
+          - accepted_values:
+              values: ['Crescimento', 'Maturidade', 'Declínio', 'Descontinuado']
+      - name: revenue_quintile
+        description: "Quintil de receita (1-5)"
+        tests:
+          - not_null
+      - name: performance_category
+        description: "Categoria de performance do produto"
+        tests:
+          - accepted_values:
+              values: ['Top Performer', 'Good Performer', 'Average Performer', 'Low Performer']
+
+  - name: dim_territories_performance
+    description: "Dimensão de territórios com métricas de ROI e performance"
+    columns:
+      - name: territory_key
+        description: "Chave primária do território"
+        tests:
+          - unique
+          - not_null
+      - name: territory_name
+        description: "Nome do território"
+      - name: country_region
+        description: "País/região do território"
+      - name: total_orders
+        description: "Total de pedidos no território"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Receita total do território"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Clientes únicos do território"
+        tests:
+          - not_null
+      - name: avg_order_value
+        description: "Valor médio do pedido"
+      - name: active_salespeople
+        description: "Vendedores ativos no território"
+      - name: revenue_per_salesperson
+        description: "Receita por vendedor"
+      - name: revenue_rank
+        description: "Ranking de receita"
+        tests:
+          - not_null
+      - name: efficiency_rank
+        description: "Ranking de eficiência"
+        tests:
+          - not_null
+      - name: aov_rank
+        description: "Ranking de valor médio do pedido"
+        tests:
+          - not_null
+      - name: roi_category
+        description: "Categoria de ROI"
+        tests:
+          - accepted_values:
+              values: ['High ROI', 'Medium ROI', 'Low ROI', 'Very Low ROI']
+      - name: performance_quartile
+        description: "Quartil de performance (1-4)"
+        tests:
+          - not_null
+
+  - name: dim_channels_performance
+    description: "Dimensão de canais de venda com métricas de performance"
+    columns:
+      - name: channel_key
+        description: "Chave primária do canal"
+        tests:
+          - unique
+          - not_null
+      - name: channel_type
+        description: "Tipo de canal"
+        tests:
+          - accepted_values:
+              values: ['Reseller', 'Online', 'Other']
+      - name: total_orders
+        description: "Total de pedidos do canal"
+        tests:
+          - not_null
+      - name: total_revenue
+        description: "Receita total do canal"
+        tests:
+          - not_null
+      - name: unique_customers
+        description: "Clientes únicos do canal"
+        tests:
+          - not_null
+      - name: avg_order_value
+        description: "Valor médio do pedido"
+      - name: total_units_sold
+        description: "Total de unidades vendidas"
+        tests:
+          - not_null
+      - name: revenue_per_customer
+        description: "Receita por cliente"
+      - name: orders_per_customer
+        description: "Pedidos por cliente"
+      - name: customer_value_segment
+        description: "Segmento de valor do cliente"
+        tests:
+          - accepted_values:
+              values: ['High Value', 'Medium Value', 'Low Value']
+      - name: purchase_frequency_segment
+        description: "Segmento de frequência de compra"
+        tests:
+          - accepted_values:
+              values: ['High Frequency', 'Medium Frequency', 'Low Frequency']
+
+  - name: dim_product_associations
+    description: "Dimensão de associações entre produtos (Market Basket Analysis)"
+    columns:
+      - name: association_key
+        description: "Chave primária da associação"
+        tests:
+          - unique
+          - not_null
+      - name: product_a_key
+        description: "Chave do primeiro produto"
+        tests:
+          - not_null
+      - name: product_a_name
+        description: "Nome do primeiro produto"
+      - name: product_a_category
+        description: "Categoria do primeiro produto"
+      - name: product_b_key
+        description: "Chave do segundo produto"
+        tests:
+          - not_null
+      - name: product_b_name
+        description: "Nome do segundo produto"
+      - name: product_b_category
+        description: "Categoria do segundo produto"
+      - name: co_occurrence_count
+        description: "Número de pedidos com ambos os produtos"
+        tests:
+          - not_null
+      - name: support
+        description: "Métrica de suporte da associação"
+        tests:
+          - not_null
+      - name: confidence_a_to_b
+        description: "Confiança da associação A -> B"
+        tests:
+          - not_null
+      - name: confidence_b_to_a
+        description: "Confiança da associação B -> A"
+        tests:
+          - not_null
+      - name: lift
+        description: "Métrica lift da associação (>1 indica correlação positiva)"
+        tests:
+          - not_null
+      - name: association_strength
+        description: "Força da associação"
+        tests:
+          - accepted_values:
+              values: ['Strong Association', 'Moderate Association', 'Weak Association', 'No Association']

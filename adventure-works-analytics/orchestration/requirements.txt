@@ -1,0 +1,4 @@
+apache-airflow[databricks]==2.7.1
+dbt-databricks==1.6.9
+requests==2.31.0
+pandas==2.0.3

@@ -1,0 +1,175 @@
+version: 2
+
+models:
+  - name: stg_sales__customer
+    description: "Staging model for Adventure Works customer data with standardized fields and business classifications"
+    columns:
+      - name: CustomerID
+        description: "Primary key for customer records"
+        tests:
+          - unique
+          - not_null
+      - name: PersonID
+        description: "Foreign key to person table for individual customers"
+      - name: StoreID
+        description: "Foreign key to store table for business customers"
+      - name: TerritoryID
+        description: "Foreign key to sales territory"
+      - name: AccountNumber
+        description: "Customer account number"
+      - name: customer_type
+        description: "Derived field: Individual, Store/Business, Store Contact, or Unknown"
+        tests:
+          - accepted_values:
+              values: ['Individual', 'Store/Business', 'Store Contact', 'Unknown']
+      - name: business_segment
+        description: "Derived field: B2C, B2B, or Unknown"
+        tests:
+          - accepted_values:
+              values: ['B2C', 'B2B', 'Unknown']
+      - name: modified_date
+        description: "Last modification timestamp"
+
+  - name: stg_sales__order_header_dw
+    description: "Staging model for sales order header data with enriched time dimensions and business metrics"
+    columns:
+      - name: SalesOrderID
+        description: "Primary key for sales order records"
+        tests:
+          - unique
+          - not_null
+      - name: CustomerID
+        description: "Foreign key to customer table"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sales__customer')
+              field: CustomerID
+      - name: SalesPersonID
+        description: "Foreign key to sales person"
+      - name: TerritoryID
+        description: "Foreign key to sales territory"
+      - name: order_date
+        description: "Date when order was placed"
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year extracted from order date"
+      - name: order_month
+        description: "Month extracted from order date"
+      - name: order_quarter
+        description: "Quarter extracted from order date"
+      - name: sales_channel
+        description: "Derived field: Online or Offline"
+        tests:
+          - accepted_values:
+              values: ['Online', 'Offline']
+      - name: revenue_category
+        description: "Revenue categorization based on TotalDue amount"
+        tests:
+          - accepted_values:
+              values: ['High Value (10K+)', 'Medium Value (1K-10K)', 'Low Value (100-1K)', 'Micro Value (<100)']
+      - name: TotalDue
+        description: "Total amount due for the order"
+        tests:
+          - not_null
+
+  - name: stg_sales__order_detail_dw
+    description: "Staging model for sales order detail data with line-level metrics and categorizations"
+    columns:
+      - name: SalesOrderDetailID
+        description: "Primary key for sales order detail records"
+        tests:
+          - unique
+          - not_null
+      - name: SalesOrderID
+        description: "Foreign key to sales order header"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_sales__order_header_dw')
+              field: SalesOrderID
+      - name: ProductID
+        description: "Foreign key to product table"
+        tests:
+          - not_null
+      - name: OrderQty
+        description: "Quantity ordered"
+        tests:
+          - not_null
+      - name: UnitPrice
+        description: "Price per unit"
+        tests:
+          - not_null
+      - name: LineTotal
+        description: "Total amount for this line item"
+        tests:
+          - not_null
+      - name: line_revenue_category
+        description: "Revenue categorization for individual line items"
+      - name: quantity_category
+        description: "Quantity categorization for line items"
+
+  - name: stg_sales__territory
+    description: "Staging model for sales territory data with regional groupings and performance metrics"
+    columns:
+      - name: TerritoryID
+        description: "Primary key for territory records"
+        tests:
+          - unique
+          - not_null
+      - name: territory_name
+        description: "Name of the sales territory"
+        tests:
+          - not_null
+      - name: region
+        description: "Regional grouping for territories"
+      - name: CountryRegionCode
+        description: "Country/region code"
+
+  - name: stg_products__product
+    description: "Staging model for product master data with pricing and categorization"
+    columns:
+      - name: ProductID
+        description: "Primary key for product records"
+        tests:
+          - unique
+          - not_null
+      - name: ProductSubcategoryID
+        description: "Foreign key to product subcategory"
+      - name: product_name
+        description: "Product name"
+        tests:
+          - not_null
+      - name: ProductNumber
+        description: "Product number/SKU"
+        tests:
+          - unique
+          - not_null
+      - name: StandardCost
+        description: "Standard cost of the product"
+      - name: ListPrice
+        description: "List price of the product"
+      - name: product_status
+        description: "Product status: Active, Discontinued, etc."
+        tests:
+          - accepted_values:
+              values: ['Active', 'Discontinued - End of Sales', 'Discontinued', 'Unknown']
+      - name: product_type
+        description: "Manufactured or Purchased"
+        tests:
+          - accepted_values:
+              values: ['Manufactured', 'Purchased']
+
+  - name: stg_products__category
+    description: "Staging model for product category data with hierarchical structure"
+    columns:
+      - name: ProductCategoryID
+        description: "Primary key for product category records"
+        tests:
+          - unique
+          - not_null
+      - name: category_name
+        description: "Category name"
+        tests:
+          - not_null

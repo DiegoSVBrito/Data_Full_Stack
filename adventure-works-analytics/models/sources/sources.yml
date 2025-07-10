@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: adventure_works_dw
+    description: "Adventure Works Data Warehouse tables"
+    database: ted_dev
+    schema: dev_diego_brito
+    tables:
+      # Sales Domain
+      - name: raw_db_sales_salesorderheader
+        description: "Sales order header from DW"
+      - name: raw_db_sales_salesorderdetail  
+        description: "Sales order details from DW"
+      - name: raw_db_sales_customer
+        description: "Customer master data"
+      - name: raw_db_sales_salesperson
+        description: "Sales person information"
+      - name: raw_db_sales_salesterritory
+        description: "Sales territory data"
+      - name: raw_db_sales_store
+        description: "Store information for B2B sales"
+      
+      # Products Domain  
+      - name: raw_db_production_product
+        description: "Product master data"
+      - name: raw_db_production_productcategory
+        description: "Product categories"
+      - name: raw_db_production_productsubcategory
+        description: "Product subcategories"
+      - name: raw_db_production_productinventory
+        description: "Product inventory levels"
+      - name: raw_db_production_productcosthistory
+        description: "Product cost history"
+      - name: raw_db_production_productlistpricehistory
+        description: "Product price history"
+      - name: raw_db_purchasing_productvendor
+        description: "Product vendor relationships"
+
+  - name: adventure_works_api
+    description: "Adventure Works API data (recent/validation)"
+    database: ted_dev
+    schema: dev_diego_brito
+    tables:
+      - name: raw_api_salesorderheader
+        description: "Sales order header from API"
+      - name: raw_api_salesorderdetail
+        description: "Sales order details from API"
