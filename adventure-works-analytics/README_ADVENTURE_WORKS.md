@@ -263,8 +263,5 @@ dbt debug
 Para dúvidas e suporte:
 - Documentação dbt: Acesse via `dbt docs serve`
 - Issues do projeto: GitHub Issues
-- Contato: analytics-team@adventureworks.com
+- Contato: analytics-team@aw.com
 
-## Licença
-
-Este projeto é de uso interno da Adventure Works Analytics Team.
